@@ -13,7 +13,7 @@ LABEL maintainer="UC San Diego ITS/ATS <datahub@ucsd.edu>"
 # 2) change to root to install packages
 USER root
 
-RUN apt-get -y install htop
+#RUN apt-get -y install htop
 
 # 3) install packages using notebook user
 USER jovyan
