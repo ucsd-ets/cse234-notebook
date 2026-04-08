@@ -13,6 +13,8 @@ LABEL maintainer="UC San Diego ITS/ATS <datahub@ucsd.edu>"
 # 3) install packages using notebook user
 USER jovyan
 
+ENV PATH="/opt/conda/bin:$PATH"
+
 # Create the cse234 conda environment
 ARG ENVNAME=cse234
 ARG PYVER=3.13
@@ -20,7 +22,10 @@ RUN mamba create --yes -p "${CONDA_DIR}/envs/${ENVNAME}" \
     python=${PYVER} \
     ipykernel \
     pip && \
-    . "${CONDA_DIR}/envs/${ENVNAME}"/bin/activate && \
+    eval `/opt/conda/bin/conda shell.bash hook` && \
+    . "/opt/conda/etc/profile.d/conda.sh" && \
+    . "/opt/conda/etc/profile.d/mamba.sh" && \
+    mamba activate "${CONDA_DIR}/envs/${ENVNAME}" && \
     pip install rapidfireai openai 
 
 #RUN apt-get -y install htop
