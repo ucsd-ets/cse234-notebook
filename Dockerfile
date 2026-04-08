@@ -10,17 +10,20 @@ FROM $BASE_CONTAINER
 
 LABEL maintainer="UC San Diego ITS/ATS <datahub@ucsd.edu>"
 
-# 2) change to root to install packages
-USER root
-
-#RUN apt-get -y install htop
-
 # 3) install packages using notebook user
 USER jovyan
 
-# RUN conda install -y scikit-learn
+# Create the cse234 conda environment
+ARG ENVNAME=cse234
+ARG PYVER=3.13
+RUN mamba create --yes -p "${CONDA_DIR}/envs/${ENVNAME}" \
+    python=${PYVER} \
+    ipykernel \
+    pip && \
+    mamba activate "${ENVNAME}" && \
+    pip install rapidfireai openai 
 
-RUN pip install --no-cache-dir openai
+#RUN apt-get -y install htop
 
 # Override command to disable running jupyter notebook at launch
 # CMD ["/bin/bash"]
