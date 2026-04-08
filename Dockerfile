@@ -15,14 +15,17 @@ USER jovyan
 
 ENV PATH="/opt/conda/bin:$PATH"
 
-# Create the cse234 conda environment
+# Create the cse234 conda environment with updated Python
+# and register new Jupyter kernel
 ARG ENVNAME=cse234
 ARG ENVDIR="${CONDA_DIR}/envs/${ENVNAME}"
 ARG PYVER=3.13
 RUN mamba create --yes -p "${ENVDIR}" python=${PYVER} pip ipykernel && \
-    mamba run -p "${ENVDIR}" pip install rapidfireai openai && \
-    mamba run -p "${ENVDIR}" python -m ipykernel install --prefix /opt/conda --name="${ENVNAME}"
+      mamba run -p "${ENVDIR}" python -m ipykernel install --prefix /opt/conda --name="${ENVNAME}"
 
+# Add course-specific packages to the cse234 conda environment
+RUN mamba run -p "${ENVDIR}" pip install rapidfireai openai
+    
 #RUN apt-get -y install htop
 
 # Override command to disable running jupyter notebook at launch
