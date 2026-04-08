@@ -17,16 +17,11 @@ ENV PATH="/opt/conda/bin:$PATH"
 
 # Create the cse234 conda environment
 ARG ENVNAME=cse234
+ARG ENVDIR="${CONDA_DIR}/envs/${ENVNAME}"
 ARG PYVER=3.13
-RUN mamba create --yes -p "${CONDA_DIR}/envs/${ENVNAME}" \
-    python=${PYVER} \
-    ipykernel \
-    pip && \
-    eval `/opt/conda/bin/conda shell.bash hook` && \
-    . "/opt/conda/etc/profile.d/conda.sh" && \
-    . "/opt/conda/etc/profile.d/mamba.sh" && \
-    mamba activate "${CONDA_DIR}/envs/${ENVNAME}" && \
-    pip install rapidfireai openai 
+RUN mamba create --yes -p "${ENVDIR}" && \
+    mamba run -p "${ENVDIR}" pip install rapidfireai openai && \
+    mamba run -p "${ENVDIR}" python -m ipykernel install --prefix /opt/conda --name="${ENVNAME}"
 
 #RUN apt-get -y install htop
 
