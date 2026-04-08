@@ -20,7 +20,7 @@ RUN mamba create --yes -p "${CONDA_DIR}/envs/${ENVNAME}" \
     python=${PYVER} \
     ipykernel \
     pip && \
-    mamba activate "${ENVNAME}" && \
+    . "${CONDA_DIR}/envs/${ENVNAME}"/bin/activate && \
     pip install rapidfireai openai 
 
 #RUN apt-get -y install htop
