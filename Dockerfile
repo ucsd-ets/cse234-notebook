@@ -19,7 +19,7 @@ ENV PATH="/opt/conda/bin:$PATH"
 ARG ENVNAME=cse234
 ARG ENVDIR="${CONDA_DIR}/envs/${ENVNAME}"
 ARG PYVER=3.13
-RUN mamba create --yes -p "${ENVDIR}" && \
+RUN mamba create --yes -p "${ENVDIR}" python=${PYVER} pip ipykernel && \
     mamba run -p "${ENVDIR}" pip install rapidfireai openai && \
     mamba run -p "${ENVDIR}" python -m ipykernel install --prefix /opt/conda --name="${ENVNAME}"
 
