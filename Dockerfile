@@ -24,7 +24,8 @@ RUN mamba create --yes -p "${ENVDIR}" python=${PYVER} pip ipykernel && \
       mamba run -p "${ENVDIR}" python -m ipykernel install --prefix /opt/conda --name="${ENVNAME}"
 
 # Add course-specific packages to the cse234 conda environment
-RUN mamba run -p "${ENVDIR}" pip install rapidfireai openai
+RUN mamba run -p "${ENVDIR}" pip install rapidfireai openai && \
+      mamba run -p "${ENVDIR}" rapidfireai init --evals
     
 #RUN apt-get -y install htop
 
