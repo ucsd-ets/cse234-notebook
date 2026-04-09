@@ -23,9 +23,15 @@ ARG PYVER=3.13
 RUN mamba create --yes -p "${ENVDIR}" python=${PYVER} pip ipykernel && \
       mamba run -p "${ENVDIR}" python -m ipykernel install --prefix /opt/conda --name="${ENVNAME}"
 
+# Bash profile hook to default terminal to cse234 environment
+COPY conda_profile.sh /etc/profile.d/conda_profile.sh
+
 # Add course-specific packages to the cse234 conda environment
 # NOTE: do not run "rapidfire init" 
-RUN mamba run -p "${ENVDIR}" pip install rapidfireai openai
+RUN mamba run -p "${ENVDIR}" pip install rapidfireai openai loguru
+
+# rapidfireai expects "setup" dir to be writeable for PID files
+RUN chmod 777 /opt/conda/envs/cse234/lib/python3.13/site-packages/setup
     
 #RUN apt-get -y install htop
 
