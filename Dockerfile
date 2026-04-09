@@ -21,16 +21,19 @@ ARG ENVNAME=cse234
 ARG ENVDIR="${CONDA_DIR}/envs/${ENVNAME}"
 ARG PYVER=3.13
 RUN mamba create --yes -p "${ENVDIR}" python=${PYVER} pip ipykernel && \
-      mamba run -p "${ENVDIR}" python -m ipykernel install --prefix /opt/conda --name="${ENVNAME}"
+      mamba run -p "${ENVDIR}" python -m ipykernel install --prefix /opt/conda --name="${ENVNAME}" && \
+      mamba run -p "${ENVDIR}" pip install uv
 
 # Bash profile hook to default terminal to cse234 environment
 COPY conda_profile.sh /etc/profile.d/conda_profile.sh
 
 # Add course-specific packages to the cse234 conda environment
-# NOTE: do not run "rapidfire init" 
-RUN mamba run -p "${ENVDIR}" pip install rapidfireai openai loguru
+# ("rapidfireai init --evals" will install CUDA torch by default, hence manual install of CPU-only version)
+RUN mamba run -p "${ENVDIR}" uv pip install 'torch<=2.8.0'  --index-url https://download.pytorch.org/whl/cpu && \
+      mamba run -p "${ENVDIR}" uv pip install rapidfireai loguru && \
+      mamba run -p "${ENVDIR}" rapidfireai init --evals
 
-# rapidfireai expects "setup" dir to be writeable for PID files
+# rapidfireai server expects "setup" dir to be writeable for PID files
 RUN chmod 777 /opt/conda/envs/cse234/lib/python3.13/site-packages/setup
     
 #RUN apt-get -y install htop
