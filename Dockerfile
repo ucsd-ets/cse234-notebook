@@ -32,7 +32,8 @@ RUN mamba run -p "${ENVDIR}"  uv pip install vllm \
             --extra-index-url https://wheels.vllm.ai/${VLLM_COMMIT}/cpu \
             --index-strategy first-index --torch-backend cpu && \
       mamba run -p "${ENVDIR}" uv pip install rapidfireai loguru && \
-      mamba run -p "${ENVDIR}" rapidfireai init --evals
+      mamba run -p "${ENVDIR}" rapidfireai init --evals && \
+      mamba run -p "${ENVDIR}" uv cache clean
 
 # rapidfireai server expects "setup" dir to be writeable for PID files
 RUN chmod 777 /opt/conda/envs/cse234/lib/python${PYVER}/site-packages/setup
