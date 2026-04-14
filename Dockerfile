@@ -34,7 +34,7 @@ RUN mamba run -p "${ENVDIR}" uv pip install 'torch<=2.8.0'  --index-url https://
       mamba run -p "${ENVDIR}" rapidfireai init --evals
 
 # rapidfireai server expects "setup" dir to be writeable for PID files
-RUN chmod 777 /opt/conda/envs/cse234/lib/python3.13/site-packages/setup
+RUN chmod 777 /opt/conda/envs/cse234/lib/python${PYVER}/site-packages/setup
     
 #RUN apt-get -y install htop
 
