@@ -27,10 +27,10 @@ RUN mamba create --yes -p "${ENVDIR}" python=${PYVER} pip ipykernel && \
 # Bash profile hook to default terminal to cse234 environment
 COPY conda_profile.sh /etc/profile.d/conda_profile.sh
 
-# Add course-specific packages to the cse234 conda environment
-# ("rapidfireai init --evals" will install CUDA torch by default, hence manual install of CPU-only version)
-RUN mamba run -p "${ENVDIR}" uv pip install 'torch<=2.8.0'  --index-url https://download.pytorch.org/whl/cpu && \
-      mamba run -p "${ENVDIR}" uv pip install vllm-cpu && \
+ARG VLLM_COMMIT=439368496db48d8f992ba8c606a0c0b1eebbfa69
+RUN mamba run -p "${ENVDIR}"  uv pip install vllm \
+            --extra-index-url https://wheels.vllm.ai/${VLLM_COMMIT}/cpu \
+            --index-strategy first-index --torch-backend cpu && \
       mamba run -p "${ENVDIR}" uv pip install rapidfireai loguru && \
       mamba run -p "${ENVDIR}" rapidfireai init --evals
 
