@@ -27,7 +27,7 @@ RUN mamba create --yes -p "${ENVDIR}" python=${PYVER} pip ipykernel && \
 # Bash profile hook to default terminal to cse234 environment
 COPY conda_profile.sh /etc/profile.d/conda_profile.sh
 
-ARG VLLM_COMMIT=439368496db48d8f992ba8c606a0c0b1eebbfa69
+ARG VLLM_COMMIT=4fd9d6a85c00ac0186aa9abbeff73fc2ac6c721e # 0.12 is first to include x86 cpu-only
 RUN mamba run -p "${ENVDIR}"  uv pip install vllm \
             --extra-index-url https://wheels.vllm.ai/${VLLM_COMMIT}/cpu \
             --index-strategy first-index --torch-backend cpu && \
