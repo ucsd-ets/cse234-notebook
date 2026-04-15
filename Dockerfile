@@ -34,7 +34,7 @@ RUN mamba run -p "${ENVDIR}"  uv pip install vllm \
             --index-strategy first-index --torch-backend cpu && \
       mamba run -p "${ENVDIR}" uv pip install rapidfireai loguru && \
       sed -i -e 's/^faiss-gpu-cu12/faiss-cpu/' -e 's/torch=.*/torch/' $RFAI_REQ && \
-      mamba run -p "${ENVDIR}" rapidfireai init --evals && \
+      echo mamba run -p "${ENVDIR}" rapidfireai init --evals && \
       mamba run -p "${ENVDIR}" uv cache clean
 
 # rapidfireai server expects "setup" dir to be writeable for PID files
