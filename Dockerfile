@@ -27,11 +27,13 @@ RUN mamba create --yes -p "${ENVDIR}" python=${PYVER} pip ipykernel && \
 # Bash profile hook to default terminal to cse234 environment
 COPY conda_profile.sh /etc/profile.d/conda_profile.sh
 
+ARG RFAI_REQ=${ENVDIR}/lib/python${PYVER}/site-packages/setup/evals/requirements-local.txt
 ARG VLLM_COMMIT=72506c98349d6bcd32b4e33eec7b5513453c1502 # 0.13 is first to include x86 cpu-only
 RUN mamba run -p "${ENVDIR}"  uv pip install vllm \
             --extra-index-url https://wheels.vllm.ai/${VLLM_COMMIT}/cpu \
             --index-strategy first-index --torch-backend cpu && \
       mamba run -p "${ENVDIR}" uv pip install rapidfireai loguru && \
+      sed -i -e 's/^faiss-gpu-cu12/faiss-cpu/' -e 's/torch=.*/torch/' $RFAI_REQ && \
       mamba run -p "${ENVDIR}" rapidfireai init --evals && \
       mamba run -p "${ENVDIR}" uv cache clean
 
