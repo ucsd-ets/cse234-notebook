@@ -46,5 +46,7 @@ RUN chmod 777 /opt/conda/envs/cse234/lib/python${PYVER}/site-packages/setup
 # CMD ["/bin/bash"]
 
 # FIXME - consolidate with above - placed here in hopes of limiting changes to previous layers
+USER root
 RUN mkdir -p /etc/datahub-profile.d
 COPY conda_profile.sh /etc/datahub-profile.d/conda_profile.sh
+USER jovyan
