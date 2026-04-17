@@ -44,3 +44,7 @@ RUN chmod 777 /opt/conda/envs/cse234/lib/python${PYVER}/site-packages/setup
 
 # Override command to disable running jupyter notebook at launch
 # CMD ["/bin/bash"]
+
+# FIXME - consolidate with above - placed here in hopes of limiting changes to previous layers
+RUN mkdir -p /etc/datahub-profile.d
+COPY conda_profile.sh /etc/datahub-profile.d/conda_profile.sh
