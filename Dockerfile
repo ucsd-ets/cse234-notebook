@@ -10,6 +10,14 @@ FROM $BASE_CONTAINER
 
 LABEL maintainer="UC San Diego ITS/ATS <datahub@ucsd.edu>"
 
+USER root
+# Install kubectl binary
+RUN curl -L -o /usr/local/bin/kubectl https://dl.k8s.io/v1.35.4/bin/linux/amd64/kubectl && chmod 0755 /usr/local/bin/kubectl
+
+# Install launch.sh (as on dsmlp-login)
+COPY launch-sh-snapshot20260419.tgz /root/launch-sh-snapshot20260419.tgz
+RUN cd / ; tar xvzf /root/launch-sh-snapshot20260419.tgz
+
 # 3) install packages using notebook user
 USER jovyan
 
@@ -40,13 +48,4 @@ RUN mamba run -p "${ENVDIR}"  uv pip install vllm \
 # rapidfireai server expects "setup" dir to be writeable for PID files
 RUN chmod 777 /opt/conda/envs/cse234/lib/python${PYVER}/site-packages/setup
     
-#RUN apt-get -y install htop
 
-# Override command to disable running jupyter notebook at launch
-# CMD ["/bin/bash"]
-
-# FIXME - consolidate with above - placed here in hopes of limiting changes to previous layers
-USER root
-RUN mkdir -p /etc/datahub-profile.d
-COPY conda_profile.sh /etc/datahub-profile.d/conda_profile.sh
-USER jovyan
