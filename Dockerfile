@@ -27,10 +27,14 @@ RUN mamba create --yes -p "${ENVDIR}" python=${PYVER} pip ipykernel && \
 # Bash profile hook to default terminal to cse234 environment
 COPY conda_profile.sh /etc/profile.d/conda_profile.sh
 
-# Override base image's torch
-# and run `rapidfireai init` without --evals
-RUN mamba run -p "${ENVDIR}"  uv pip install --upgrade --force-reinstall torch torchvision torchaudio \
-            --index-url https://download.pytorch.org/whl/cu126 && \
+
+# Run `rapidfireai init` without --evals
+# Install vllm version 0.10.2 (cu128 by default) corresponding to trl==0.21.0 in the init 
+# And override base image's torch to match vllm==0.10.2
+RUN mamba run -p "${ENVDIR}"  uv pip install --upgrade --force-reinstall \
+            torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 \
+            --index-url https://download.pytorch.org/whl/cu128 && \
+      mamba run -p "${ENVDIR}"  uv pip install vllm==0.10.2 && \
       mamba run -p "${ENVDIR}" uv pip install rapidfireai loguru && \
       mamba run -p "${ENVDIR}" rapidfireai init && \
       mamba run -p "${ENVDIR}" uv cache clean
